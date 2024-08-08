@@ -17,7 +17,7 @@ let loggued = false;
 			<div class="navbar-end" v-if="!loggued">
 				<div class="navbar-item">
 					<div class="buttons">
-						<a class="button is-primary" href="users">
+						<a class="button is-primary" href="a">
 							<strong>Sign up</strong>
 						</a>
 						<a class="button is-light"> Log in </a>
