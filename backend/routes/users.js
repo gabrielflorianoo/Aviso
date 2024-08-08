@@ -19,6 +19,8 @@ router.get("/", (req, res) => {
 router.post("/", UserValidator, checkDuplicates, (req, res) => {
 	users.push(req.body);
 
+  req.session.user = req.body;
+
 	res.send("User validated and created");
 });
 
