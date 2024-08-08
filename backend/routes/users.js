@@ -12,6 +12,7 @@ const users = [
 
 /* GET users listing. */
 router.get("/", (req, res) => {
+	req.session.user = users[0];
 	res.send(users);
 });
 
