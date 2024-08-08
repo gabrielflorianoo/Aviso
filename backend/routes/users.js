@@ -17,12 +17,29 @@ router.get("/", (req, res) => {
 });
 
 /* POST request for creating a user. */
-router.post("/", UserValidator, checkDuplicates, (req, res) => {
+router.post("/register", UserValidator, checkDuplicates, (req, res) => {
 	users.push(req.body);
 
-  req.session.user = req.body;
+	req.session.user = req.body;
 
 	res.send("User validated and created");
+});
+
+/* POST request for logging. */
+router.post("/login", UserValidator, (req, res) => {
+	const found = users.filter(
+		(user) =>
+			user.username == req.body.username &&
+			user.email == req.body.email &&
+			user.password == req.body.password
+	);
+
+	if (!found) {
+		res.status(413).send("User not found");
+	}
+
+	req.session.user = req.body;
+	res.send("User found");
 });
 
 function checkDuplicates(req, res, next) {
