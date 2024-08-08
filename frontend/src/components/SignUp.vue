@@ -4,10 +4,7 @@
 			<div class="field">
 				<label class="label">Username</label>
 				<div class="control has-icons-left has-icons-right">
-					<input
-						class="input"
-						type="text"
-						placeholder="Text input"/>
+					<input class="input" type="text" placeholder="Text input" />
 					<span class="icon is-small is-left">
 						<i class="fas fa-user"></i>
 					</span>
@@ -15,7 +12,7 @@
 						<i class="fas fa-check"></i>
 					</span>
 				</div>
-				<p class="help" hidden>This username is available</p>
+				<p class="help availability">This username is available</p>
 			</div>
 
 			<div class="field">
@@ -24,7 +21,7 @@
 					<input
 						class="input"
 						type="email"
-						placeholder="Email input"/>
+						placeholder="Email input" />
 					<span class="icon is-small is-left">
 						<i class="fas fa-envelope"></i>
 					</span>
@@ -32,7 +29,7 @@
 						<i class="fas fa-exclamation-triangle"></i>
 					</span>
 				</div>
-				<p class="help" hidden>This email is invalid</p>
+				<p class="help availability">This email is invalid</p>
 			</div>
 
 			<div class="field">
@@ -41,15 +38,15 @@
 					<input
 						class="input"
 						type="password"
-						placeholder="Text input"/>
+						placeholder="Text input" />
 					<span class="icon is-small is-left">
-						<i class="fas fa-user"></i>
+						<i class="fas fa-lock"></i>
 					</span>
 					<span class="icon is-small is-right">
 						<i class="fas fa-check"></i>
 					</span>
 				</div>
-				<p class="help" hidden>This password is not available</p>
+				<p class="help availability">This password is not available</p>
 			</div>
 
 			<div class="field">
@@ -73,6 +70,25 @@
 	</section>
 </template>
 
-<script setup></script>
+<script setup>
+	import { ref, onMounted } from "vue";
 
-<style scoped></style>
+	// Cria uma referência reativa
+	let availabilityRefs = ref([]);
+
+	onMounted(() => {
+		// Após o componente ser montado, capture os elementos
+		availabilityRefs.value = document.getElementsByClassName("availability");
+
+		// Itera sobre os elementos e aplica a opacidade
+		Array.from(availabilityRefs.value).forEach((element) => {
+			element.style.opacity = "0";
+		});
+	});
+</script>
+
+<style scoped>
+	.availability {
+		transition: opacity 0.5s ease;
+	}
+</style>
