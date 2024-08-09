@@ -21,7 +21,7 @@
                 style="background-color: bisque"
             >
                 <h1 class="title globalTitle">Global chat</h1>
-                <div>
+                <div class="">
                     <div
                         class="p-1 holdCards"
                         v-for="message in messages"
@@ -114,11 +114,12 @@
 
     .holdCards {
         width: 100%;
-        display: flex;
+        display: grid;
         align-content: end; /* Move o conteúdo para o fundo do contêiner */
     }
 
     .messageCard {
+        align-self: flex-end;
         justify-self: end;
     }
 
