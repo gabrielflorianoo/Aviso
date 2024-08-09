@@ -61,7 +61,7 @@
             <div class="navbar-end" v-else>
                 <div class="navbar-item">
                     <div class="buttons">
-                        <a class="button is-primary">
+                        <a class="button is-primary" href="createMessage">
                             <strong>Create a Tweet</strong>
                         </a>
                         <a class="button is-danger" @click="logout">
