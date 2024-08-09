@@ -17,14 +17,19 @@ router.get('/', (req, res) => {
 });
 
 /* POST request for creating a user. */
-router.post('/register', UserValidator.ValidateUser, checkDuplicates, (req, res) => {
-    users.push(req.body);
+router.post(
+    '/register',
+    UserValidator.ValidateUser,
+    checkDuplicates,
+    (req, res) => {
+        users.push(req.body);
 
-    req.session.user = req.body;
-    console.log(req.session.user);
+        req.session.user = req.body;
+        console.log(req.session.user);
 
-    res.send('User validated and created');
-});
+        res.send('User validated and created');
+    }
+);
 
 /* POST request for logging. */
 router.post('/login', UserValidator.ValidateUserLogin, (req, res) => {

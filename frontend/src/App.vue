@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import axios from 'axios';
-import Navbar from './components/Navbar.vue';
+    import Navbar from './components/Navbar.vue';
     import { ref, onMounted } from 'vue';
 
     let logged = ref(false);
