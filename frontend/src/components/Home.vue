@@ -21,6 +21,7 @@
 <script setup lang="ts">
     import axios from 'axios';
     import { onMounted, ref } from 'vue';
+    import Message from './Message.vue';
 
     let messages = ref([]);
 
@@ -28,8 +29,7 @@
         try {
             const response = await axios.get('http://localhost:3000/tweets');
 
-            messages = response.data;
-            console.log(messages);
+            messages.value = response.data;
         } catch (error) {
             console.log('Error while loading messages: ', error);
         }

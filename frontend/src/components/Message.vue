@@ -4,7 +4,8 @@
             <div class="content">
                 <strong>{{ message.userID }}</strong> said:
             </div>
-            <div class="content">
+            <hr class="is-divider"/>
+            <div class="content p-2">
                 {{ message.message }}
             </div>
         </div>
