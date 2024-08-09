@@ -14,10 +14,12 @@
                         <i class="fas fa-user"></i>
                     </span>
                     <span class="icon is-small is-right">
-                        <i class="fas fa-check"></i>
+                        <i class="fas fa-check check-mark"></i>
                     </span>
                 </div>
-                <p class="help availability">This username is available</p>
+                <p class="help availability is-danger">
+                    This username is available
+                </p>
             </div>
 
             <div class="field">
@@ -33,10 +35,10 @@
                         <i class="fas fa-envelope"></i>
                     </span>
                     <span class="icon is-small is-right">
-                        <i class="fas fa-exclamation-triangle"></i>
+                        <i class="fas fa-check check-mark"></i>
                     </span>
                 </div>
-                <p class="help availability">This email is invalid</p>
+                <p class="help availability is-danger">This email is invalid</p>
             </div>
 
             <div class="field">
@@ -52,10 +54,12 @@
                         <i class="fas fa-lock"></i>
                     </span>
                     <span class="icon is-small is-right">
-                        <i class="fas fa-check"></i>
+                        <i class="fas fa-check check-mark"></i>
                     </span>
                 </div>
-                <p class="help availability">This password is not available</p>
+                <p class="help availability is-danger">
+                    This password is not available
+                </p>
             </div>
 
             <div class="field">
@@ -72,7 +76,12 @@
                     <button class="button is-link">Submit</button>
                 </div>
                 <div class="control">
-                    <button class="button is-link is-light" @click.prevent="cancel">Cancel</button>
+                    <button
+                        class="button is-link is-light"
+                        @click.prevent="cancel"
+                    >
+                        Cancel
+                    </button>
                 </div>
             </div>
         </div>
@@ -83,13 +92,15 @@
     import axios from 'axios';
     import { ref, onMounted } from 'vue';
 
-    // Cria uma referência reativa
+    // Cria referências reativas
     let availabilityRefs = ref([]);
+    let checkMarks = ref([]);
 
     onMounted(() => {
-        // Após o componente ser montado, capture os elementos
+        // Após o dom ser montado, capture os elementos
         availabilityRefs.value =
             document.getElementsByClassName('availability');
+        checkMarks.value = document.getElementsByClassName('check-mark');
 
         // Itera sobre os elementos e aplica a opacidade
         Array.from(availabilityRefs.value).forEach((element) => {
@@ -114,8 +125,18 @@
                 }
             );
 
-            console.log('Usuário criado com sucesso:', response);
+            window.location.href = '/';
         } catch (error) {
+            if (error.response && error.response.status == 400) {
+                availabilityRefs.value[2].style.opacity = '1';
+
+                getInputFromRef(checkMarks, 2)[0].classList.add(
+                    'is-danger'
+                );
+
+                checkMarks.value[2].classList.remove('fa-check');
+                checkMarks.value[2].classList.add('fa-exclamation-triangle');
+            }
             console.error('Erro ao criar usuário:', error);
         }
     }
@@ -126,10 +147,20 @@
         userPass.value = '';
         termsAccepted.value = false;
     }
+
+    function getInputFromRef(refNode, idx) {
+        try {
+            return refNode.value[idx].parentElement.parentNode.childNodes;
+        } catch (error) {
+            console.log(error);
+        }
+    }
 </script>
 
 <style scoped>
     .availability {
         transition: opacity 0.5s ease;
+    }
+    .fa-exclamation-triangle {
     }
 </style>
