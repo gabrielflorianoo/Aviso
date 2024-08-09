@@ -3,7 +3,10 @@
         <div class="columns p-2">
             <div class="column is-2" style="background-color: aqua">
                 <div v-for="userTag in users" :key="userTag.username">
-                    <User :user="userTag" />
+                    <User
+                        :user="userTag"
+                        v-if="user?.username != userTag.username"
+                    />
                 </div>
             </div>
             <div

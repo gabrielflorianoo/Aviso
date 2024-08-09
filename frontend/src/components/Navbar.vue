@@ -1,20 +1,9 @@
 <script setup>
     import axios from 'axios';
-    import { ref, onMounted } from 'vue';
 
-    let logged = ref(false);
-
-    onMounted(async () => {
-        try {
-            const response = await axios.get(
-                'http://localhost:3000/session-status',
-                { withCredentials: true }
-            );
-
-            logged.value = response.data.loggedIn;
-        } catch (error) {
-            console.error('Error while checking user session:', error);
-        }
+    // Recebe a propriedade 'logged' do componente pai
+    const props = defineProps({
+        logged: Boolean,
     });
 
     async function logout() {
