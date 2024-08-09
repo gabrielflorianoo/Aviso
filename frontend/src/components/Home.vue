@@ -17,20 +17,23 @@
                 </div>
             </div>
             <div
-                class="column is-flex is-align-items-end cardColumn"
+                class="column is-align-items-end cardColumn"
                 style="background-color: bisque"
             >
-                <div
-                    class="p-1 holdCards"
-                    v-for="message in messages"
-                    :key="message.messageID"
-                >
-                    <Message
-                        :message="message"
-                        v-if="message.userID == user?.username"
-                        class="messageCard"
-                    />
-                    <Message :message="message" v-else />
+                <h1 class="title globalTitle">Global chat</h1>
+                <div>
+                    <div
+                        class="p-1 holdCards"
+                        v-for="message in messages"
+                        :key="message.messageID"
+                    >
+                        <Message
+                            :message="message"
+                            v-if="message.userID == user?.username"
+                            class="messageCard"
+                        />
+                        <Message :message="message" v-else />
+                    </div>
                 </div>
             </div>
             <div class="column is-2" style="background-color: chartreuse">
@@ -93,18 +96,32 @@
     .columns {
         height: 100%;
     }
+
     .cardColumn {
-        flex-direction: column;
-        justify-content: end;
+        display: grid; /* Torna o contêiner um flex container */
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+        flex-direction: column; /* Organiza os itens em uma coluna */
+        justify-content: flex-end; /* Alinha os itens no topo */
+        height: 100%;
     }
+
+    .globalTitle {
+        align-self: start; /* Alinha o título no topo do contêiner */
+        justify-self: center; /* Coloca o título no meio do container */
+        margin-bottom: 1rem; /* Espaço abaixo do título */
+    }
+
     .holdCards {
         width: 100%;
-        display: grid;
-        grid-template-columns: 1fr; /* Define uma única coluna */
+        display: flex;
+        align-content: end; /* Move o conteúdo para o fundo do contêiner */
     }
+
     .messageCard {
         justify-self: end;
     }
+
     .holdCards > * {
         width: 500px;
     }
