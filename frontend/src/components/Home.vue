@@ -3,15 +3,23 @@
         <div class="columns p-2">
             <div class="column is-2" style="background-color: aqua">Users</div>
             <div
-                class="column is-flex is-align-items-end"
+                class="column is-flex is-align-items-end cardColumn"
                 style="background-color: bisque"
             >
                 <div
-                    class="p-1"
+                    class="p-1 holdCards"
                     v-for="message in messages"
                     :key="message.messageID"
                 >
-                    <Message :message="message" />
+                    <Message
+                        :message="message"
+                        v-if="message.userID == user?.username"
+                        class="messageCard"
+                    />
+                    <Message
+                        :message="message"
+                        v-else
+                    />
                 </div>
             </div>
             <div class="column is-2" style="background-color: chartreuse">
@@ -25,10 +33,29 @@
     import axios from 'axios';
     import { onMounted, ref } from 'vue';
     import Message from './Message.vue';
+    import type { Message as MessageType, User as UserType } from '../types.ts';
 
-    let messages = ref([]);
+    let messages = ref<MessageType[]>([]);
+    let user = ref<UserType | null>(null);
 
     onMounted(async () => {
+        await getUser();
+        await getPosts();
+    });
+
+    async function getUser() {
+        try {
+            const response = await axios.get(
+                'http://localhost:3000/get-session-user',
+                { withCredentials: true }
+            );
+
+            user.value = response.data;
+        } catch (error: any) {
+            console.log('Error while getting user: ', error.message);
+        }
+    }
+    async function getPosts() {
         try {
             const response = await axios.get('http://localhost:3000/tweets');
 
@@ -36,11 +63,26 @@
         } catch (error) {
             console.log('Error while loading messages: ', error);
         }
-    });
+    }
 </script>
 
 <style scoped>
     .columns {
         height: 100%;
+    }
+    .cardColumn {
+        flex-direction: column;
+        justify-content: end;
+    }
+    .holdCards {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr; /* Define uma única coluna */
+    }
+    .messageCard {
+        justify-self: end;
+    }
+    .holdCards > * {
+        width: 500px;
     }
 </style>
