@@ -11,6 +11,7 @@
                 </h1>
                 <div v-for="userTag in users" :key="userTag.username">
                     <User
+                        class="m-1 p-2"
                         :user="userTag"
                         v-if="user?.username != userTag.username"
                     />
