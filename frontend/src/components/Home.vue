@@ -2,6 +2,12 @@
     <section class="is-full-desktop">
         <div class="columns p-2">
             <div class="column is-2" style="background-color: aqua">
+                <h1 class="subtitle has-text-weight-bold" v-if="user?.username">
+                    Other users
+                </h1>
+                <h1 class="subtitle has-text-weight-bold" v-else>
+                    All users in our system
+                </h1>
                 <div v-for="userTag in users" :key="userTag.username">
                     <User
                         :user="userTag"
