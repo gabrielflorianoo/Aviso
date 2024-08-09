@@ -18,6 +18,22 @@
     </section>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+    import axios from 'axios';
+    import { onMounted, ref } from 'vue';
+
+    let messages = ref([]);
+
+    onMounted(async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/tweets');
+
+            messages = response.data;
+            console.log(messages);
+        } catch (error) {
+            console.log('Error while loading messages: ', error);
+        }
+    });
+</script>
 
 <style scoped></style>

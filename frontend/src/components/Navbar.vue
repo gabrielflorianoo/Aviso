@@ -14,9 +14,23 @@
             logged.value = response.data.loggedIn;
             console.log(response.data);
         } catch (error) {
-            console.error('Erro ao verificar a sessão do usuário:', error);
+            console.error('Error while checking user session:', error);
         }
     });
+
+    async function logout() {
+        try {
+            const response = await axios.get(
+                'http://localhost:3000/users/logout',
+                { withCredentials: true }
+            );
+
+            // Redireciona para a página inicial
+            window.location.href = '/';
+        } catch (error) {
+            console.log('Error while logging out', error);
+        }
+    }
 </script>
 
 <template>
@@ -35,10 +49,12 @@
             <div class="navbar-end" v-if="!logged">
                 <div class="navbar-item">
                     <div class="buttons">
-                        <a class="button is-primary" href="a">
+                        <a class="button is-primary" href="signup">
                             <strong>Sign up</strong>
                         </a>
-                        <a class="button is-light"> Log in </a>
+                        <a class="button is-light" href="login">
+                            <strong>Log in</strong>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -47,6 +63,9 @@
                     <div class="buttons">
                         <a class="button is-primary">
                             <strong>Create a Tweet</strong>
+                        </a>
+                        <a class="button is-danger" @click="logout">
+                            <strong>Logout</strong>
                         </a>
                     </div>
                 </div>

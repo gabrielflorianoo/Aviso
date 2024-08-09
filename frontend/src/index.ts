@@ -4,10 +4,12 @@ import "./style.css";
 import App from "./App.vue";
 import Home from "./components/Home.vue";
 import SignUp from "./components/SignUp.vue";
+import LogIn from "./components/LogIn.vue";
 
 const routes = [
 	{ path: "/", component: Home },
-	{ path: "/a", component: SignUp },
+	{ path: "/signup", component: SignUp },
+	{ path: "/login", component: LogIn },
 ];
 
 const router = createRouter({
