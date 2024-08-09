@@ -23,25 +23,6 @@
             </div>
 
             <div class="field">
-                <label class="label">Email</label>
-                <div class="control has-icons-left has-icons-right">
-                    <input
-                        class="input"
-                        v-model="userEmail"
-                        type="email"
-                        placeholder="Email input"
-                    />
-                    <span class="icon is-small is-left">
-                        <i class="fas fa-envelope"></i>
-                    </span>
-                    <span class="icon is-small is-right">
-                        <i class="fas fa-check check-mark"></i>
-                    </span>
-                </div>
-                <p class="help availability is-danger">This email is invalid</p>
-            </div>
-
-            <div class="field">
                 <label class="label">Password</label>
                 <div class="control has-icons-left has-icons-right">
                     <input
@@ -110,7 +91,6 @@
 
     // Referências reativas para os dados do formulário
     const userName = ref('');
-    const userEmail = ref('');
     const userPass = ref('');
     const termsAccepted = ref(false);
 
@@ -131,30 +111,29 @@
         } catch (error) {
             // Cria um erro personalizado caso a senha esteja errada
             if (error.response && error.response.status == 400) {
-                availabilityRefs.value[2].style.display = 'block';
-                availabilityRefs.value[2].style.opacity = '1';
+                availabilityRefs.value[1].style.display = 'block';
+                availabilityRefs.value[1].style.opacity = '1';
 
-                getInputFromRef(checkMarks, 2)[0].classList.add('is-danger');
+                getInputFromRef(checkMarks, 1)[0].classList.add('is-danger');
 
-                checkMarks.value[2].classList.remove('fa-check');
-                checkMarks.value[2].classList.add('fa-exclamation-triangle');
+                checkMarks.value[1].classList.remove('fa-check');
+                checkMarks.value[1].classList.add('fa-exclamation-triangle');
             }
 
             // Cria um erro personalizado caso o usuário ja exista
             if (error.response && error.response.status == 401) {
-                availabilityRefs.value[2].style.display = 'block';
-                availabilityRefs.value[2].style.opacity = '1';
+                availabilityRefs.value[1].style.display = 'block';
+                availabilityRefs.value[1].style.opacity = '1';
 
-                availabilityRefs.value[2].textContent = 'User already exists';
+                availabilityRefs.value[1].textContent = 'User already exists';
             }
-            console.error('Error while creating user:', error);
+            console.error('Error while creating user:', error.message);
         }
     }
 
     function cancel() {
         // Reseta todos os valores
         userName.value = '';
-        userEmail.value = '';
         userPass.value = '';
         termsAccepted.value = false;
     }

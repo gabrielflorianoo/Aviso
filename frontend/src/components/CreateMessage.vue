@@ -45,7 +45,6 @@
     import { ref } from 'vue';
 
     let messageRef = ref('');
-    let username = ref('');
 
     async function createPost() {
         await axios
@@ -53,18 +52,18 @@
                 'http://localhost:3000/tweets',
                 {
                     message: messageRef.value,
-                    userID: username.value,
                 },
                 { withCredentials: true }
             )
             .catch((err) => {
-                console.log('Error while creating post: ', err);
+                console.log('Error while creating post: ', err.message);
             });
+
+            window.location.href = "/";
     }
 
     function cancel() {
         messageRef.value = '';
-        username.value = '';
     }
 </script>
 

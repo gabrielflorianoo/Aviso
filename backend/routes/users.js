@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
 });
 
 /* POST request for creating a user. */
-router.post('/register', UserValidator, checkDuplicates, (req, res) => {
+router.post('/register', UserValidator.ValidateUser, checkDuplicates, (req, res) => {
     users.push(req.body);
 
     req.session.user = req.body;
@@ -27,7 +27,7 @@ router.post('/register', UserValidator, checkDuplicates, (req, res) => {
 });
 
 /* POST request for logging. */
-router.post('/login', UserValidator, (req, res) => {
+router.post('/login', UserValidator.ValidateUserLogin, (req, res) => {
     const found = users.filter(
         (user) =>
             user.username == req.body.username &&

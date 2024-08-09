@@ -2,7 +2,10 @@
     <section class="is-full-desktop">
         <div class="columns p-2">
             <div class="column is-2" style="background-color: aqua">Users</div>
-            <div class="column" style="background-color: bisque">
+            <div
+                class="column is-flex is-align-items-end"
+                style="background-color: bisque"
+            >
                 <div
                     class="p-1"
                     v-for="message in messages"
@@ -36,4 +39,8 @@
     });
 </script>
 
-<style scoped></style>
+<style scoped>
+    .columns {
+        height: 100%;
+    }
+</style>

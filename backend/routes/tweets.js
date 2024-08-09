@@ -8,7 +8,7 @@ const messages = [
         messageID: '1234567890abcdef',
         message: 'Este é um exemplo de mensagem com o usuário exampleUser.',
         userID: 'exampleUser',
-        creatDate: Date.now(),
+        createDate: Date.now(),
     },
 ];
 

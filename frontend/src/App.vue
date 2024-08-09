@@ -16,14 +16,14 @@
 
 <template>
     <Navbar />
-    <router-view></router-view>
+    <router-view class="router"></router-view>
 </template>
 
 <style>
     Navbar {
         height: 7vh;
     }
-    section {
+    .router {
         height: 93vh;
     }
 </style>
