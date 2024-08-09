@@ -1,5 +1,22 @@
 <script setup>
-    let loggued = false;
+    import axios from 'axios';
+    import { ref, onMounted } from 'vue';
+
+    let logged = ref(false);
+
+    onMounted(async () => {
+        try {
+            const response = await axios.get(
+                'http://localhost:3000/session-status',
+                { withCredentials: true }
+            );
+
+            logged.value = response.data.loggedIn;
+            console.log(response.data);
+        } catch (error) {
+            console.error('Erro ao verificar a sessão do usuário:', error);
+        }
+    });
 </script>
 
 <template>
@@ -15,7 +32,7 @@
         </div>
 
         <div id="navbarBasicExample" class="navbar-menu">
-            <div class="navbar-end" v-if="!loggued">
+            <div class="navbar-end" v-if="!logged">
                 <div class="navbar-item">
                     <div class="buttons">
                         <a class="button is-primary" href="a">

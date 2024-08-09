@@ -116,38 +116,51 @@
 
     async function createNewUser() {
         try {
+            // Faz um post para criar um novo usuário
             const response = await axios.post(
                 'http://localhost:3000/users/register',
                 {
                     username: userName.value.trim(),
                     email: userEmail.value.trim(),
                     password: userPass.value,
-                }
+                },
+                { withCredentials: true }
             );
 
+            // Redireciona para a página inicial
             window.location.href = '/';
         } catch (error) {
+            // Cria um erro personalizado caso a senha esteja errada
             if (error.response && error.response.status == 400) {
+                availabilityRefs.value[2].style.display = 'block';
                 availabilityRefs.value[2].style.opacity = '1';
 
-                getInputFromRef(checkMarks, 2)[0].classList.add(
-                    'is-danger'
-                );
+                getInputFromRef(checkMarks, 2)[0].classList.add('is-danger');
 
                 checkMarks.value[2].classList.remove('fa-check');
                 checkMarks.value[2].classList.add('fa-exclamation-triangle');
             }
-            console.error('Erro ao criar usuário:', error);
+
+            // Cria um erro personalizado caso o usuário ja exista
+            if (error.response && error.response.status == 401) {
+                availabilityRefs.value[2].style.display = 'block';
+                availabilityRefs.value[2].style.opacity = '1';
+
+                availabilityRefs.value[2].textContent = 'User already exists';
+            }
+            console.error('Error while creating user:', error);
         }
     }
 
     function cancel() {
+        // Reseta todos os valores
         userName.value = '';
         userEmail.value = '';
         userPass.value = '';
         termsAccepted.value = false;
     }
 
+    // Função auxiliar para pegar o input dos icones
     function getInputFromRef(refNode, idx) {
         try {
             return refNode.value[idx].parentElement.parentNode.childNodes;
@@ -159,8 +172,7 @@
 
 <style scoped>
     .availability {
+        display: none;
         transition: opacity 0.5s ease;
-    }
-    .fa-exclamation-triangle {
     }
 </style>
