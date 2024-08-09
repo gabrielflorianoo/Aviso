@@ -12,7 +12,6 @@
             );
 
             logged.value = response.data.loggedIn;
-            console.log(response.data);
         } catch (error) {
             console.error('Error while checking user session:', error);
         }

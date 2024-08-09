@@ -1,7 +1,11 @@
 <template>
     <section class="is-full-desktop">
         <div class="columns p-2">
-            <div class="column is-2" style="background-color: aqua">Users</div>
+            <div class="column is-2" style="background-color: aqua">
+                <div v-for="userTag in users" :key="userTag.username">
+                    <User :user="userTag" />
+                </div>
+            </div>
             <div
                 class="column is-flex is-align-items-end cardColumn"
                 style="background-color: bisque"
@@ -16,10 +20,7 @@
                         v-if="message.userID == user?.username"
                         class="messageCard"
                     />
-                    <Message
-                        :message="message"
-                        v-else
-                    />
+                    <Message :message="message" v-else />
                 </div>
             </div>
             <div class="column is-2" style="background-color: chartreuse">
@@ -33,17 +34,20 @@
     import axios from 'axios';
     import { onMounted, ref } from 'vue';
     import Message from './Message.vue';
+    import User from './User.vue';
     import type { Message as MessageType, User as UserType } from '../types.ts';
 
     let messages = ref<MessageType[]>([]);
+    let users = ref<UserType[]>([]);
     let user = ref<UserType | null>(null);
 
     onMounted(async () => {
-        await getUser();
+        await getUserSession();
         await getPosts();
+        await getUsers();
     });
 
-    async function getUser() {
+    async function getUserSession() {
         try {
             const response = await axios.get(
                 'http://localhost:3000/get-session-user',
@@ -60,6 +64,15 @@
             const response = await axios.get('http://localhost:3000/tweets');
 
             messages.value = response.data;
+        } catch (error) {
+            console.log('Error while loading messages: ', error);
+        }
+    }
+    async function getUsers() {
+        try {
+            const response = await axios.get('http://localhost:3000/users');
+
+            users.value = response.data;
         } catch (error) {
             console.log('Error while loading messages: ', error);
         }
