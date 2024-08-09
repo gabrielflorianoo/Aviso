@@ -2,7 +2,7 @@
 
 ## Descrição
 
-**Aviso** é um aplicativo de chat online desenvolvido como parte do meu aprendizado na disciplina de Programação FullStack. Este projeto tem como objetivo consolidar os conhecimentos adquiridos nas aulas de Web Front End e BackEnd, aplicando conceitos fundamentais do desenvolvimento de sistemas completos.
+**Aviso** é um aplicativo de chat online desenvolvido como parte do meu aprendizado para minha futura disciplina de Programação FullStack. Este projeto tem como objetivo consolidar os conhecimentos adquiridos nas aulas de Web Front End e BackEnd, aplicando conceitos fundamentais do desenvolvimento de sistemas completos.
 
 O projeto é construído utilizando **Express** no lado do servidor e **Vue.js** no lado do cliente, permitindo a comunicação em tempo real entre usuários conectados.
 
