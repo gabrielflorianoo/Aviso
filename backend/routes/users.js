@@ -26,7 +26,6 @@ router.post(
         users.push(req.body);
 
         req.session.user = req.body;
-        console.log(req.session.user);
 
         res.send('User validated and created');
     },
@@ -49,7 +48,6 @@ router.post(
         }
 
         req.session.user = req.body;
-        console.log(req.body);
         res.send('User found');
     },
 );
