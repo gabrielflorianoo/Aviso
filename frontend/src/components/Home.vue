@@ -14,7 +14,9 @@
                         class="m-1 p-2"
                         :user="userTag"
                         @click="clickedUser"
-                        v-if="user?.username != userTag.username"
+                        v-if="
+                            authStore.loggedUser?.username != userTag.username
+                        "
                     />
                 </div>
             </div>
@@ -23,7 +25,7 @@
                 :messages="messages"
                 :globalChat="globalChat"
                 @update:globalChat="turnGlobalChat"
-                :user="user"
+                :user="authStore.loggedUser"
             />
             <div class="column is-2" style="background-color: chartreuse">
                 Settings
@@ -47,19 +49,24 @@
     let user = ref<UserType | null>(null);
     let globalChat = ref<Boolean>(true); // Variable that tracks if it is in global chat or not
     let userFocused = ref<string>('');
-    let logged = ref<Boolean>(false);
 
     onMounted(async () => {
         await authStore.checkSession();
+        await authStore.getUserSession();
         await getPosts();
         await getUsers();
     });
-
     async function getPosts() {
         try {
             const response = await axios.get('http://localhost:3000/tweets');
 
-            messages.value = response.data;
+            if (!globalChat) {
+                messages.value = response.data.filter(
+                    (elm: MessageType) => elm.userID == userFocused.value,
+                );
+            } else {
+                messages.value = response.data;
+            }
         } catch (error) {
             console.log('Error while loading messages: ', error);
         }
