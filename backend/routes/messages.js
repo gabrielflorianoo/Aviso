@@ -14,7 +14,7 @@ const messages = [
 ];
 
 /* GET users listing. */
-router.get('/', (req, res) => {
+router.get('/globalMessages', (req, res) => {
     res.send(messages);
 });
 

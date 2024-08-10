@@ -18,8 +18,6 @@ function ValidateMessage(req, res, next) {
         req.body.toUser = '';
     }
 
-    console.log(req.body);
-
     const { error } = UserSchema.validate(req.body);
 
     if (error) {

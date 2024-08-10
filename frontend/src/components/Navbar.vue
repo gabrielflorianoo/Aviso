@@ -1,8 +1,10 @@
 <script setup>
     import axios from 'axios';
     import { useAuthStore } from '../stores/auth';
+    import { computed } from 'vue';
 
     const authStore = useAuthStore();
+    let logged = computed(() => authStore.logged);
 
     async function logout() {
         try {
@@ -32,7 +34,7 @@
         </div>
 
         <div id="navbarBasicExample" class="navbar-menu">
-            <div class="navbar-end" v-if="!authStore.logged">
+            <div class="navbar-end" v-if="!logged">
                 <div class="navbar-item">
                     <div class="buttons">
                         <a class="button is-primary" href="signup">

@@ -42,10 +42,13 @@
 
 <script setup lang="ts">
     import axios from 'axios';
-    import { ref } from 'vue';
+    import { computed, ref } from 'vue';
+    import { useGlobalsStore } from '../stores/globals';
+
+    let globalStore = useGlobalsStore();
 
     let messageRef = ref<string>('');
-    let messageTo = ref<string>('');
+    let messageTo = computed(() => globalStore.userFocused);
 
     async function createPost() {
         await axios
@@ -53,19 +56,21 @@
                 'http://localhost:3000/tweets',
                 {
                     message: messageRef.value,
-                    toUser: messageTo.value
+                    toUser: messageTo.value,
                 },
-                { withCredentials: true }
+                { withCredentials: true },
             )
             .catch((err) => {
                 console.log('Error while creating post: ', err.message);
             });
 
-            window.location.href = "/";
+        window.location.href = '/';
     }
 
     function cancel() {
         messageRef.value = '';
+
+        window.location.href = '/';
     }
 </script>
 

@@ -24,7 +24,6 @@ export const useAuthStore = defineStore('auth', () => {
                 'http://localhost:3000/get-session-user',
                 { withCredentials: true },
             );
-
             loggedUser.value = response.data;
         } catch (error: any) {
             console.log('Error while getting user: ', error.message);

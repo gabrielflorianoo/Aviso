@@ -46,7 +46,7 @@
     let messages = ref<MessageType[]>([]);
     let users = ref<UserType[]>([]);
     let user = ref<UserType | null>(null);
-    let userFocused = ref<string>('');
+    let userFocused = computed(() => globalStore.userFocused);
     const filteredUsers = computed(() =>
         users.value.filter(
             (userTag) => authStore.loggedUser?.username !== userTag.username,
@@ -63,7 +63,9 @@
     });
     async function getPosts() {
         try {
-            const response = await axios.get('http://localhost:3000/tweets');
+            const response = await axios.get(
+                'http://localhost:3000/tweets/globalMessages',
+            );
 
             if (!globalChat.value) {
                 messages.value = response.data.filter(
@@ -90,7 +92,7 @@
 
     async function clickedUser(username: string) {
         if (authStore.logged) {
-            userFocused.value = username;
+            globalStore.setUserFocused(username);
             globalStore.setGlobalChat(false);
 
             await getPosts();
