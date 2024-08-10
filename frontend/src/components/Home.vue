@@ -13,7 +13,7 @@
                     <User
                         class="m-1 p-2"
                         :user="userTag"
-                        @click="clickedUser"
+                        @click="clickedUser(userTag.username)"
                     />
                 </div>
             </div>
@@ -97,6 +97,8 @@
 
             await getPosts();
         }
+
+        console.log(globalStore.userFocused);
     }
     function turnGlobalChat(turned: boolean) {
         if (authStore.logged) {

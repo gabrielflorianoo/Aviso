@@ -11,20 +11,6 @@
             </div>
         </div>
 
-        <div class="field">
-            <h3>Have your username in the post?</h3>
-            <div class="control">
-                <label class="radio">
-                    <input type="radio" name="question" />
-                    Yes
-                </label>
-                <label class="radio pl-3">
-                    <input type="radio" name="question" />
-                    No
-                </label>
-            </div>
-        </div>
-
         <div class="field is-grouped">
             <div class="control">
                 <button class="button is-link" @click.prevent="createPost">
@@ -49,6 +35,7 @@
 
     let messageRef = ref<string>('');
     let messageTo = computed(() => globalStore.userFocused);
+    console.log(messageTo.value);
 
     async function createPost() {
         await axios

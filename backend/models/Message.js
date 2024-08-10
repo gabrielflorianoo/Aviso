@@ -6,7 +6,7 @@ const UserSchema = Joi.object({
     message: Joi.string().min(1).max(300).required(),
     userID: Joi.string().min(3).max(30).required(),
     createDate: Joi.date().required(),
-    toUser: Joi.string().min(3).max(30).required(), // Who was sent to, may be empty
+    toUser: Joi.string().max(30).allow(''), // Permite strings vazias
 });
 
 function ValidateMessage(req, res, next) {
