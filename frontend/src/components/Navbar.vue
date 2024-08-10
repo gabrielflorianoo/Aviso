@@ -1,16 +1,14 @@
 <script setup>
     import axios from 'axios';
+    import { useAuthStore } from '../stores/auth';
 
-    // Recebe a propriedade 'logged' do componente pai
-    const props = defineProps({
-        logged: Boolean,
-    });
+    const authStore = useAuthStore();
 
     async function logout() {
         try {
             const response = await axios.get(
                 'http://localhost:3000/users/logout',
-                { withCredentials: true }
+                { withCredentials: true },
             );
 
             // Redireciona para a página inicial
@@ -34,7 +32,7 @@
         </div>
 
         <div id="navbarBasicExample" class="navbar-menu">
-            <div class="navbar-end" v-if="!logged">
+            <div class="navbar-end" v-if="!authStore.logged">
                 <div class="navbar-item">
                     <div class="buttons">
                         <a class="button is-primary" href="signup">

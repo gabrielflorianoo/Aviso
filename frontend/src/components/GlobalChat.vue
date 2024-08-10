@@ -4,7 +4,7 @@
         style="background-color: bisque"
         v-if="globalChat"
     >
-        <h1 class="title globalTitle">Global chat</h1>
+        <h1 class="title globalSection">Global chat</h1>
         <div>
             <div
                 class="p-1 holdCards"
@@ -25,7 +25,12 @@
         style="background-color: beige"
         v-else
     >
-        <h1 class="title globalTitle">Private Chat</h1>
+        <section class="globalSection">
+            <h1 class="title globalTitle">Private Chat</h1>
+            <button class="button is-danger" @click="turnGlobalChat">
+                Go to Global Chat
+            </button>
+        </section>
         <div>
             <div
                 class="p-1 holdCards"
@@ -64,6 +69,11 @@
                 required: true,
             },
         },
+        methods: {
+            turnGlobalChat() {
+                this.$emit('update:globalChat', true);
+            },
+        },
     };
 </script>
 
@@ -77,10 +87,18 @@
         height: 100%;
     }
 
-    .globalTitle {
+    .globalSection {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
         align-self: start;
-        justify-self: center;
         margin-bottom: 1rem;
+    }
+
+    .globalSection button {
+        width: fit-content;
+        justify-self: end;
     }
 
     .holdCards {

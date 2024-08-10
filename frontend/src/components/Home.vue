@@ -18,9 +18,11 @@
                     />
                 </div>
             </div>
+            <!-- @update:globalChat is the emit from the GlobalChat method -->
             <GlobalChat
                 :messages="messages"
                 :globalChat="globalChat"
+                @update:globalChat="turnGlobalChat"
                 :user="user"
             />
             <div class="column is-2" style="background-color: chartreuse">
@@ -36,31 +38,23 @@
     import GlobalChat from './GlobalChat.vue';
     import User from './User.vue';
     import type { Message as MessageType, User as UserType } from '../types.ts';
+    import { useAuthStore } from '../stores/auth.ts';
+
+    const authStore = useAuthStore();
 
     let messages = ref<MessageType[]>([]);
     let users = ref<UserType[]>([]);
     let user = ref<UserType | null>(null);
     let globalChat = ref<Boolean>(true); // Variable that tracks if it is in global chat or not
     let userFocused = ref<string>('');
+    let logged = ref<Boolean>(false);
 
     onMounted(async () => {
-        await getUserSession();
+        await authStore.checkSession();
         await getPosts();
         await getUsers();
     });
 
-    async function getUserSession() {
-        try {
-            const response = await axios.get(
-                'http://localhost:3000/get-session-user',
-                { withCredentials: true },
-            );
-
-            user.value = response.data;
-        } catch (error: any) {
-            console.log('Error while getting user: ', error.message);
-        }
-    }
     async function getPosts() {
         try {
             const response = await axios.get('http://localhost:3000/tweets');
@@ -81,7 +75,17 @@
     }
 
     function clickedUser(username: string) {
-        userFocused.value = username;
+        if (authStore.logged) {
+            userFocused.value = username;
+            globalChat.value = false;
+
+            messages.value = [];
+        }
+    }
+    function turnGlobalChat(turned: boolean) {
+        if (authStore.logged) {
+            globalChat.value = turned;
+        }
     }
 </script>
 
