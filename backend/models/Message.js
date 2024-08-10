@@ -1,28 +1,29 @@
-const { json } = require("express");
-const Joi = require("joi");
-const uuid = require("uuid");
+const Joi = require('joi');
+const uuid = require('uuid');
 
 const UserSchema = Joi.object({
-  messageID: Joi.string().required(),
-  message: Joi.string().min(1).max(300).required(),
-  userID: Joi.string().min(3).max(30).required(),
-  createDate: Joi.date().required(),
+    messageID: Joi.string().required(),
+    message: Joi.string().min(1).max(300).required(),
+    userID: Joi.string().min(3).max(30).required(),
+    createDate: Joi.date().required(),
+    toUser: Joi.string().min(3).max(30), // Who was sent to, may be empty
 });
 
 function ValidateMessage(req, res, next) {
-  // The Id of the user must be its username
-  req.body.messageID = uuid.v4();
-  req.body.userID = req.session.user.username;
-  req.body.createDate = new Date();
-  console.log(req.body);
+    // The Id of the user must be its username
+    req.body.messageID = uuid.v4();
+    req.body.userID = req.session.user.username;
+    req.body.createDate = new Date();
 
-  const { error } = UserSchema.validate(req.body);
+    console.log(req.body);
 
-  if (error) {
-    return res.status(400).send(error.details[0].message); // Use 400 para erros de validação
-  }
+    const { error } = UserSchema.validate(req.body);
 
-  next();
+    if (error) {
+        return res.status(400).send(error.details[0].message); // Usar 400 para erros de validação
+    }
+
+    next();
 }
 
 module.exports = ValidateMessage;

@@ -99,24 +99,24 @@
     }
 
     .cardColumn {
-        display: grid; /* Torna o contêiner um flex container */
+        display: grid;
         grid-template-columns: 1fr;
         grid-template-rows: 1fr 1fr;
-        flex-direction: column; /* Organiza os itens em uma coluna */
-        justify-content: flex-end; /* Alinha os itens no topo */
+        flex-direction: column;
+        justify-content: flex-end;
         height: 100%;
     }
 
     .globalTitle {
-        align-self: start; /* Alinha o título no topo do contêiner */
-        justify-self: center; /* Coloca o título no meio do container */
-        margin-bottom: 1rem; /* Espaço abaixo do título */
+        align-self: start;
+        justify-self: center;
+        margin-bottom: 1rem;
     }
 
     .holdCards {
         width: 100%;
         display: grid;
-        align-content: end; /* Move o conteúdo para o fundo do contêiner */
+        align-content: end;
     }
 
     .messageCard {
