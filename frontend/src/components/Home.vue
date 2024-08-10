@@ -9,14 +9,11 @@
                             : 'All users in our system'
                     }}
                 </h1>
-                <div v-for="userTag in users" :key="userTag.username">
+                <div v-for="userTag in filteredUsers" :key="userTag.username">
                     <User
                         class="m-1 p-2"
                         :user="userTag"
                         @click="clickedUser"
-                        v-if="
-                            authStore.loggedUser?.username != userTag.username
-                        "
                     />
                 </div>
             </div>
@@ -24,7 +21,7 @@
             <GlobalChat
                 :messages="messages"
                 :globalChat="globalChat"
-                @update:globalChat="turnGlobalChat"
+                @toggleGlobalChat="turnGlobalChat"
                 :user="authStore.loggedUser"
             />
             <div class="column is-2" style="background-color: chartreuse">
@@ -36,19 +33,27 @@
 
 <script setup lang="ts">
     import axios from 'axios';
-    import { onMounted, ref } from 'vue';
+    import { computed, onMounted, ref } from 'vue';
     import GlobalChat from './GlobalChat.vue';
     import User from './User.vue';
     import type { Message as MessageType, User as UserType } from '../types.ts';
     import { useAuthStore } from '../stores/auth.ts';
+    import { useGlobalsStore } from '../stores/globals.ts';
 
     const authStore = useAuthStore();
+    const globalStore = useGlobalsStore();
 
     let messages = ref<MessageType[]>([]);
     let users = ref<UserType[]>([]);
     let user = ref<UserType | null>(null);
-    let globalChat = ref<Boolean>(true); // Variable that tracks if it is in global chat or not
     let userFocused = ref<string>('');
+    const filteredUsers = computed(() =>
+        users.value.filter(
+            (userTag) => authStore.loggedUser?.username !== userTag.username,
+        ),
+    );
+
+    const globalChat = computed(() => globalStore.globalChat);
 
     onMounted(async () => {
         await authStore.checkSession();
@@ -60,9 +65,11 @@
         try {
             const response = await axios.get('http://localhost:3000/tweets');
 
-            if (!globalChat) {
+            if (!globalChat.value) {
                 messages.value = response.data.filter(
-                    (elm: MessageType) => elm.userID == userFocused.value,
+                    (elm: MessageType) =>
+                        elm.userID == userFocused.value &&
+                        elm.toUser == user.value?.username,
                 );
             } else {
                 messages.value = response.data;
@@ -81,17 +88,17 @@
         }
     }
 
-    function clickedUser(username: string) {
+    async function clickedUser(username: string) {
         if (authStore.logged) {
             userFocused.value = username;
-            globalChat.value = false;
+            globalStore.setGlobalChat(false);
 
-            messages.value = [];
+            await getPosts();
         }
     }
     function turnGlobalChat(turned: boolean) {
         if (authStore.logged) {
-            globalChat.value = turned;
+            globalStore.setGlobalChat(turned);
         }
     }
 </script>

@@ -44,7 +44,8 @@
     import axios from 'axios';
     import { ref } from 'vue';
 
-    let messageRef = ref('');
+    let messageRef = ref<string>('');
+    let messageTo = ref<string>('');
 
     async function createPost() {
         await axios
@@ -52,6 +53,7 @@
                 'http://localhost:3000/tweets',
                 {
                     message: messageRef.value,
+                    toUser: messageTo.value
                 },
                 { withCredentials: true }
             )

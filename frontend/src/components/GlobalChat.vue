@@ -71,7 +71,7 @@
         },
         methods: {
             turnGlobalChat() {
-                this.$emit('update:globalChat', true);
+                this.$emit('toggleGlobalChat', true);
             },
         },
     };
