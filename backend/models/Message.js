@@ -6,7 +6,7 @@ const UserSchema = Joi.object({
     message: Joi.string().min(1).max(300).required(),
     userID: Joi.string().min(3).max(30).required(),
     createDate: Joi.date().required(),
-    toUser: Joi.string().min(3).max(30), // Who was sent to, may be empty
+    toUser: Joi.string().min(3).max(30).required(), // Who was sent to, may be empty
 });
 
 function ValidateMessage(req, res, next) {
@@ -14,6 +14,9 @@ function ValidateMessage(req, res, next) {
     req.body.messageID = uuid.v4();
     req.body.userID = req.session.user.username;
     req.body.createDate = new Date();
+    if (!req.body.toUser) {
+        req.body.toUser = '';
+    }
 
     console.log(req.body);
 

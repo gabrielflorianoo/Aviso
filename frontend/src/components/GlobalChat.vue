@@ -1,0 +1,100 @@
+<template>
+    <div
+        class="column is-align-items-end cardColumn"
+        style="background-color: bisque"
+        v-if="globalChat"
+    >
+        <h1 class="title globalTitle">Global chat</h1>
+        <div>
+            <div
+                class="p-1 holdCards"
+                v-for="message in messages"
+                :key="message.messageID"
+            >
+                <Message
+                    :message="message"
+                    v-if="message.userID == user?.username"
+                    class="messageCard"
+                />
+                <Message :message="message" v-else />
+            </div>
+        </div>
+    </div>
+    <div
+        class="column is-align-items-end cardColumn"
+        style="background-color: beige"
+        v-else
+    >
+        <h1 class="title globalTitle">Private Chat</h1>
+        <div>
+            <div
+                class="p-1 holdCards"
+                v-for="message in messages"
+                :key="message.messageID"
+            >
+                <Message
+                    :message="message"
+                    v-if="message.userID == user?.username"
+                    class="messageCard"
+                />
+                <Message :message="message" v-else />
+            </div>
+        </div>
+    </div>
+</template>
+
+<script lang="ts">
+    import Message from './Message.vue';
+
+    export default {
+        components: {
+            Message,
+        },
+        props: {
+            globalChat: {
+                type: Boolean,
+                required: true,
+            },
+            messages: {
+                type: Array, // Corrigido para Array
+                required: true,
+            },
+            user: {
+                type: Object as () => Object | null,
+                required: true,
+            },
+        },
+    };
+</script>
+
+<style scoped>
+    .cardColumn {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+        flex-direction: column;
+        justify-content: flex-end;
+        height: 100%;
+    }
+
+    .globalTitle {
+        align-self: start;
+        justify-self: center;
+        margin-bottom: 1rem;
+    }
+
+    .holdCards {
+        width: 100%;
+        display: grid;
+        align-content: end;
+    }
+
+    .messageCard {
+        align-self: flex-end;
+        justify-self: end;
+    }
+
+    .holdCards > * {
+        width: 500px;
+    }
+</style>

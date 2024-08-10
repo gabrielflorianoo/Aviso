@@ -1,5 +1,5 @@
 <template>
-    <a href="" class="p-1">
+    <a class="p-1" @click="handleClick">
         <figure class="image is-48x48 is-flex is-align-items-center">
             <img
                 class="is-rounded"
@@ -18,6 +18,11 @@
             user: {
                 type: Object,
                 required: true,
+            },
+        },
+        methods: {
+            handleClick() {
+                this.$emit('click', this.user.username);
             },
         },
     };

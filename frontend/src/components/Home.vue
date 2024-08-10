@@ -13,30 +13,16 @@
                     <User
                         class="m-1 p-2"
                         :user="userTag"
+                        @click="clickedUser"
                         v-if="user?.username != userTag.username"
                     />
                 </div>
             </div>
-            <div
-                class="column is-align-items-end cardColumn"
-                style="background-color: bisque"
-            >
-                <h1 class="title globalTitle">Global chat</h1>
-                <div class="">
-                    <div
-                        class="p-1 holdCards"
-                        v-for="message in messages"
-                        :key="message.messageID"
-                    >
-                        <Message
-                            :message="message"
-                            v-if="message.userID == user?.username"
-                            class="messageCard"
-                        />
-                        <Message :message="message" v-else />
-                    </div>
-                </div>
-            </div>
+            <GlobalChat
+                :messages="messages"
+                :globalChat="globalChat"
+                :user="user"
+            />
             <div class="column is-2" style="background-color: chartreuse">
                 Settings
             </div>
@@ -47,13 +33,15 @@
 <script setup lang="ts">
     import axios from 'axios';
     import { onMounted, ref } from 'vue';
-    import Message from './Message.vue';
+    import GlobalChat from './GlobalChat.vue';
     import User from './User.vue';
     import type { Message as MessageType, User as UserType } from '../types.ts';
 
     let messages = ref<MessageType[]>([]);
     let users = ref<UserType[]>([]);
     let user = ref<UserType | null>(null);
+    let globalChat = ref<Boolean>(true); // Variable that tracks if it is in global chat or not
+    let userFocused = ref<string>('');
 
     onMounted(async () => {
         await getUserSession();
@@ -65,7 +53,7 @@
         try {
             const response = await axios.get(
                 'http://localhost:3000/get-session-user',
-                { withCredentials: true }
+                { withCredentials: true },
             );
 
             user.value = response.data;
@@ -91,40 +79,14 @@
             console.log('Error while loading messages: ', error);
         }
     }
+
+    function clickedUser(username: string) {
+        userFocused.value = username;
+    }
 </script>
 
 <style scoped>
     .columns {
         height: 100%;
-    }
-
-    .cardColumn {
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr 1fr;
-        flex-direction: column;
-        justify-content: flex-end;
-        height: 100%;
-    }
-
-    .globalTitle {
-        align-self: start;
-        justify-self: center;
-        margin-bottom: 1rem;
-    }
-
-    .holdCards {
-        width: 100%;
-        display: grid;
-        align-content: end;
-    }
-
-    .messageCard {
-        align-self: flex-end;
-        justify-self: end;
-    }
-
-    .holdCards > * {
-        width: 500px;
     }
 </style>
