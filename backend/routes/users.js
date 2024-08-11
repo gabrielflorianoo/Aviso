@@ -86,21 +86,34 @@ router.put('/:username', (req, res, next) => {
     let message = createMessage(req.body.message, req.body.loggedUser);
     let sender = req.body.sender.username;
 
+    console.log(req.body);
+
     let userFoundIdx = users.findIndex(
         (user) => user.username == req.params.username,
     );
 
-    if (users[userFoundIdx].privateMessages) {
-        let senderIdx = users[userFoundIdx].privateMessages.findIndex(
-            (privM) => privM.name == sender,
-        );
+    if (userFoundIdx === -1) {
+        return res.status(404).send('User not found');
+    }
 
+    // Verifica se privateMessages é um array
+    if (!Array.isArray(users[userFoundIdx].privateMessages)) {
+        users[userFoundIdx].privateMessages = [];
+    }
+
+    let senderIdx = users[userFoundIdx].privateMessages.findIndex(
+        (privM) => privM.name == sender,
+    );
+
+    if (senderIdx !== -1) {
+        // Se o usuário já tem mensagens privadas de 'sender'
         users[userFoundIdx].privateMessages[senderIdx].messages.push(message);
     } else {
-        users[userFoundIdx].privateMessages = {
+        // Se não houver mensagens de 'sender', cria uma nova entrada
+        users[userFoundIdx].privateMessages.push({
             name: sender,
             messages: [message],
-        };
+        });
     }
 
     res.send('User updated');

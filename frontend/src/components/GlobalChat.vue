@@ -32,21 +32,25 @@
             </button>
         </section>
         <div>
-            <div class="p-1 holdCards">
-                <template v-if="messages && messages.length > 0">
-                    <div v-for="message in messages" :key="message.messageID">
-                        <Message
-                            :message="message"
-                            v-if="message.userID == user?.username"
-                            class="messageCard"
-                        />
-                        <Message :message="message" v-else />
-                    </div>
-                </template>
-                <template v-else>
-                    <h1 class="title">No messages with this person</h1>
-                </template>
-            </div>
+            <template v-if="messages && messages.length > 0">
+                <div v-for="message in messages" class="p-1 holdCards">
+                    <Message
+                        v-if="message?.userID == user?.username"
+                        :key="message.messageID"
+                        :message="message"
+                        :username="user?.username"
+                        class="messageCard"
+                    />
+                    <Message
+                        v-else
+                        :key="message.messageID + '-else'"
+                        :message="message"
+                    />
+                </div>
+            </template>
+            <template v-else>
+                <h1 class="title">No messages with this person</h1>
+            </template>
         </div>
     </div>
 </template>
@@ -128,6 +132,7 @@
     }
 
     .messageCard {
+        width: 100%;
         align-self: flex-end;
         justify-self: end;
     }

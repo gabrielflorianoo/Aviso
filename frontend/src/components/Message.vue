@@ -2,9 +2,9 @@
     <div class="card">
         <div class="card-content">
             <div class="content">
-                <strong>{{ message.userID }}</strong> said:
+                <strong>{{ username ? 'You' : message.userID }}</strong> said:
             </div>
-            <hr class="is-divider"/>
+            <hr class="is-divider" />
             <div class="content p-2">
                 {{ message.message }}
             </div>
@@ -18,6 +18,10 @@
             message: {
                 type: Object,
                 required: true,
+            },
+            username: {
+                type: String,
+                required: false,
             },
         },
     };

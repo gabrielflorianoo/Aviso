@@ -64,7 +64,6 @@
 
     // Recalc messages everytime globalChat changes
     watch(globalChat, async () => {
-        console.log('Global Changed');
         await getPosts();
     });
 
@@ -100,8 +99,6 @@
                     } else {
                         value = [];
                     }
-
-                    console.log(value);
                 } else {
                     value = [];
                 }
