@@ -79,7 +79,7 @@ router.post(
 
 router.put('/:username', (req, res, next) => {
     let message = createMessage(req.body.message, req.body.loggedUser);
-    let sender = req.body.sender;
+    let sender = req.body.sender.username;
 
     let userFoundIdx = users.findIndex(
         (user) => user.username == req.params.username,

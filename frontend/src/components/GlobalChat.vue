@@ -122,6 +122,7 @@
         width: 100%;
         display: grid;
         align-content: end;
+        gap: 10px;
     }
 
     .messageCard {

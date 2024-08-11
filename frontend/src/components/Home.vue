@@ -62,12 +62,12 @@
     const globalChat = computed(() =>
         authStore.logged ? globalStore.globalChat : true,
     );
-    
+
     // Recalc messages everytime globalChat changes
     watch(globalChat, async () => {
         await getPosts();
     });
-    
+
     // Functions that are called everytime the page is reloaded
     onMounted(async () => {
         await authStore.checkSession();
@@ -87,15 +87,21 @@
                     `http://localhost:3000/users/${userFocused.value}`,
                 );
 
-                value = response.data.messages;
+                // Get the messages sent to the loggedUser
+                value = response.data.find(
+                    (prvMess: any) =>
+                        prvMess.name == authStore.loggedUser?.username,
+                ).messages;
             } else {
                 response = await axios.get(
                     'http://localhost:3000/tweets/globalMessages',
                 );
 
+                // Get globalMessages
                 value = response.data;
             }
 
+            console.log(value);
             messages.value = value || [];
         } catch (error) {
             console.log('Error while loading messages: ', error);
