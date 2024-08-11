@@ -50,7 +50,6 @@
     // Update variable everytime it changes on the entire project
     let userFocused = computed(() => globalStore.userFocused);
 
-    console.log(authStore.loggedUser?.username);
     // Exclude the user that are logged in
     const filteredUsers = computed(() => {
         return users.value.filter(
@@ -65,6 +64,7 @@
 
     // Recalc messages everytime globalChat changes
     watch(globalChat, async () => {
+        console.log('Global Changed');
         await getPosts();
     });
 
@@ -87,11 +87,24 @@
                     `http://localhost:3000/users/${userFocused.value}`,
                 );
 
-                // Get the messages sent to the loggedUser
-                value = response.data.find(
-                    (prvMess: any) =>
-                        prvMess.name == authStore.loggedUser?.username,
-                ).messages;
+                if (response.data) {
+                    // Get the messages sent to the loggedUser
+                    let found = response.data.find(
+                        (prvMess: any) =>
+                            prvMess.name == authStore.loggedUser?.username,
+                    );
+
+                    
+                    if (found && found.messages) {
+                        value = found.messages;
+                    } else {
+                        value = [];
+                    }
+
+                    console.log(value);
+                } else {
+                    value = [];
+                }
             } else {
                 response = await axios.get(
                     'http://localhost:3000/tweets/globalMessages',
@@ -101,7 +114,6 @@
                 value = response.data;
             }
 
-            console.log(value);
             messages.value = value || [];
         } catch (error) {
             console.log('Error while loading messages: ', error);

@@ -78,7 +78,9 @@
             const authStore = useAuthStore();
 
             // Computed properties to access global state
-            const globalChat = computed(() => authStore.logged ? globalStore.globalChat : true);
+            const globalChat = computed(() =>
+                authStore.logged ? globalStore.globalChat : true,
+            );
 
             function turnGlobalChat() {
                 if (authStore.logged) {

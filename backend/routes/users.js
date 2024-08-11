@@ -27,6 +27,11 @@ const users = [
             },
         ],
     },
+    {
+        username: 'exampleUser3',
+        email: 'user3@example.com',
+        password: 'P@ssw0rd123',
+    },
 ];
 
 /* GET users listing. */
