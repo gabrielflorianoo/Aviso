@@ -57,7 +57,11 @@
             await axios
                 .put(
                     `http://localhost:3000/users/${messageTo.value}`,
-                    { sender: sender.value, message: messageRef.value },
+                    {
+                        sender: sender.value,
+                        message: messageRef.value,
+                        loggedUser: authStore.loggedUser?.username,
+                    },
                     { withCredentials: true },
                 )
                 .catch((err) => {

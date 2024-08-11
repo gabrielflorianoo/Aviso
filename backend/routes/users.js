@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const UserValidator = require('../models/User.js');
+const uuid = require('uuid');
 
 const users = [
     {
@@ -12,6 +13,19 @@ const users = [
         username: 'exampleUser2',
         email: 'user2@example.com',
         password: 'P@ssw0rd123',
+        privateMessages: [
+            {
+                name: 'exampleUser',
+                messages: [
+                    {
+                        messageID: '1234567890abcdef',
+                        message: 'Hello man',
+                        userID: 'exampleUser',
+                        createDate: Date.now(),
+                    },
+                ],
+            },
+        ],
     },
 ];
 
@@ -64,6 +78,26 @@ router.post(
 );
 
 router.put('/:username', (req, res, next) => {
+    let message = createMessage(req.body.message, req.body.loggedUser);
+    let sender = req.body.sender;
+
+    let userFoundIdx = users.findIndex(
+        (user) => user.username == req.params.username,
+    );
+
+    if (users[userFoundIdx].privateMessages) {
+        let senderIdx = users[userFoundIdx].privateMessages.findIndex(
+            (privM) => privM.name == sender,
+        );
+
+        users[userFoundIdx].privateMessages[senderIdx].messages.push(message);
+    } else {
+        users[userFoundIdx].privateMessages = {
+            name: sender,
+            messages: [message],
+        };
+    }
+
     res.send('User updated');
 });
 
@@ -102,6 +136,15 @@ function checkDuplicates(req, res, next) {
     }
 
     next();
+}
+
+function createMessage(message, loggedUser) {
+    return {
+        messageID: uuid.v4(),
+        message: message,
+        userID: loggedUser,
+        createDate: Date.now(),
+    };
 }
 
 module.exports = router;

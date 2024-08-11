@@ -39,6 +39,7 @@
     import type { Message as MessageType, User as UserType } from '../types.ts';
     import { useAuthStore } from '../stores/auth.ts';
     import { useGlobalsStore } from '../stores/globals.ts';
+import { uuidv4 } from 'uuidv7';
 
     // Global variables
     const authStore = useAuthStore();
@@ -58,8 +59,10 @@
         );
     });
 
-    // Update variable everytime it changes on the entire project
-    const globalChat = computed(() => globalStore.globalChat);
+    // Update variable everytime it changes on the entire project or if user is logged
+    const globalChat = computed(() =>
+        authStore.logged ? globalStore.globalChat : false,
+    );
 
     // Recalc messages everytime globalChat changes
     watch(globalChat, async () => {
@@ -72,25 +75,29 @@
         await authStore.getUserSession();
         await getUsers();
         await getPosts();
-        console.log(users.value);
     });
 
     // Fetch messages from the backend
     async function getPosts() {
         try {
             let response;
+            let value;
 
             if (!globalChat.value) {
                 response = await axios.get(
                     `http://localhost:3000/users/${userFocused.value}`,
                 );
+
+                value = response.data.messages;
             } else {
                 response = await axios.get(
                     'http://localhost:3000/tweets/globalMessages',
                 );
+
+                value = response.data;
             }
 
-            messages.value = response.data;
+            messages.value = value;
         } catch (error) {
             console.log('Error while loading messages: ', error);
         }
@@ -102,9 +109,6 @@
             const response = await axios.get('http://localhost:3000/users');
 
             users.value = response.data;
-            response.data.forEach((element: any) => {
-                console.log(element);
-            });
         } catch (error) {
             console.log('Error while loading messages: ', error);
         }
