@@ -4,7 +4,7 @@
             <div class="column is-2" style="background-color: aqua">
                 <h1 class="subtitle has-text-weight-bold has-text-centered">
                     {{
-                        user?.username
+                        authStore.loggedUser
                             ? 'Other users'
                             : 'All users in our system'
                     }}
@@ -33,63 +33,84 @@
 
 <script setup lang="ts">
     import axios from 'axios';
-    import { computed, onMounted, ref } from 'vue';
+    import { computed, onMounted, ref, watch } from 'vue';
     import GlobalChat from './GlobalChat.vue';
     import User from './User.vue';
     import type { Message as MessageType, User as UserType } from '../types.ts';
     import { useAuthStore } from '../stores/auth.ts';
     import { useGlobalsStore } from '../stores/globals.ts';
 
+    // Global variables
     const authStore = useAuthStore();
     const globalStore = useGlobalsStore();
 
+    // References for the messages and the users
     let messages = ref<MessageType[]>([]);
     let users = ref<UserType[]>([]);
-    let user = ref<UserType | null>(null);
+
+    // Update variable everytime it changes on the entire project
     let userFocused = computed(() => globalStore.userFocused);
+
+    // Exclude the user that are logged in
     const filteredUsers = computed(() => {
         return users.value.filter(
             (elm: UserType) => elm.username != authStore.loggedUser?.username,
         );
     });
 
+    // Update variable everytime it changes on the entire project
     const globalChat = computed(() => globalStore.globalChat);
 
+    // Recalc messages everytime globalChat changes
+    watch(globalChat, async () => {
+        await getPosts();
+    });
+
+    // Functions that are called everytime the page is reloaded
     onMounted(async () => {
         await authStore.checkSession();
         await authStore.getUserSession();
-        await getPosts();
         await getUsers();
+        await getPosts();
+        console.log(users.value);
     });
+
+    // Fetch messages from the backend
     async function getPosts() {
         try {
-            if (!globalChat.value) {
-                const response = await axios.get(
-                    `http://localhost:3000/users/${user.value}`,
-                );
+            let response;
 
-                let privateMessages = response.data.privateMessages;
+            if (!globalChat.value) {
+                response = await axios.get(
+                    `http://localhost:3000/users/${userFocused.value}`,
+                );
             } else {
-                const response = await axios.get(
+                response = await axios.get(
                     'http://localhost:3000/tweets/globalMessages',
                 );
-
-                messages.value = response.data;
             }
+
+            messages.value = response.data;
         } catch (error) {
             console.log('Error while loading messages: ', error);
         }
     }
+
+    // Fetch users from the backend
     async function getUsers() {
         try {
             const response = await axios.get('http://localhost:3000/users');
 
             users.value = response.data;
+            response.data.forEach((element: any) => {
+                console.log(element);
+            });
         } catch (error) {
             console.log('Error while loading messages: ', error);
         }
     }
 
+    // Track everytime you click on an user in the users tab
     async function clickedUser(username: string) {
         if (authStore.logged) {
             globalStore.setUserFocused(username);
@@ -99,6 +120,7 @@
         }
     }
 
+    // Function for turning globalChat on/off
     function turnGlobalChat(turned: boolean) {
         if (authStore.logged) {
             globalStore.setGlobalChat(turned);

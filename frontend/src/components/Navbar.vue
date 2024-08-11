@@ -8,10 +8,10 @@
 
     async function logout() {
         try {
-            const response = await axios.get(
+            const response = await axios.post(
                 'http://localhost:3000/users/logout',
                 { withCredentials: true },
-            );
+            );  
 
             // Redireciona para a página inicial
             window.location.href = '/';
