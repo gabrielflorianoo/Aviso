@@ -20,7 +20,6 @@
             <!-- @toggleGlobalChat is the emit from the GlobalChat method -->
             <GlobalChat
                 :messages="messages"
-                :globalChat="globalChat"
                 @toggleGlobalChat="turnGlobalChat"
                 :user="authStore.loggedUser"
             />
@@ -39,7 +38,6 @@
     import type { Message as MessageType, User as UserType } from '../types.ts';
     import { useAuthStore } from '../stores/auth.ts';
     import { useGlobalsStore } from '../stores/globals.ts';
-import { uuidv4 } from 'uuidv7';
 
     // Global variables
     const authStore = useAuthStore();
@@ -52,6 +50,7 @@ import { uuidv4 } from 'uuidv7';
     // Update variable everytime it changes on the entire project
     let userFocused = computed(() => globalStore.userFocused);
 
+    console.log(authStore.loggedUser?.username);
     // Exclude the user that are logged in
     const filteredUsers = computed(() => {
         return users.value.filter(
@@ -61,14 +60,14 @@ import { uuidv4 } from 'uuidv7';
 
     // Update variable everytime it changes on the entire project or if user is logged
     const globalChat = computed(() =>
-        authStore.logged ? globalStore.globalChat : false,
+        authStore.logged ? globalStore.globalChat : true,
     );
-
+    
     // Recalc messages everytime globalChat changes
     watch(globalChat, async () => {
         await getPosts();
     });
-
+    
     // Functions that are called everytime the page is reloaded
     onMounted(async () => {
         await authStore.checkSession();
@@ -97,7 +96,7 @@ import { uuidv4 } from 'uuidv7';
                 value = response.data;
             }
 
-            messages.value = value;
+            messages.value = value || [];
         } catch (error) {
             console.log('Error while loading messages: ', error);
         }

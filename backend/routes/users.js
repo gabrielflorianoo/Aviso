@@ -101,13 +101,6 @@ router.put('/:username', (req, res, next) => {
     res.send('User updated');
 });
 
-/* GET request for logging out. */
-router.post('/logout', (req, res) => {
-    req.session.destroy();
-
-    res.send('User logged out succesfully');
-});
-
 function getOtherUsers(req, res, next) {
     if (!req.body.privateMessages) {
         try {

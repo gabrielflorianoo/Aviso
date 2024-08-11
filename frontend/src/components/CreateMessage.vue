@@ -39,6 +39,7 @@
     let messageTo = computed(() => globalStore.userFocused);
     let sender = computed(() => authStore.loggedUser);
 
+    console.log(messageTo.value, sender.value);
     async function createPost() {
         if (messageTo.value == '') {
             await axios

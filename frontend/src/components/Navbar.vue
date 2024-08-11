@@ -8,8 +8,8 @@
 
     async function logout() {
         try {
-            const response = await axios.post(
-                'http://localhost:3000/users/logout',
+            const response = await axios.get(
+                'http://localhost:3000/logout',
                 { withCredentials: true },
             );  
 

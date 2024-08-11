@@ -33,7 +33,7 @@
         </section>
         <div>
             <div class="p-1 holdCards">
-                <template v-if="messages.length > 0">
+                <template v-if="messages && messages.length > 0">
                     <div v-for="message in messages" :key="message.messageID">
                         <Message
                             :message="message"
@@ -56,6 +56,7 @@
     import type { User as UserType, Message as MessageType } from '../types';
     import { computed } from 'vue';
     import { useGlobalsStore } from '../stores/globals';
+    import { useAuthStore } from '../stores/auth';
 
     export default {
         name: 'GlobalChat',
@@ -64,7 +65,7 @@
         },
         props: {
             messages: {
-                type: Array as () => MessageType[],
+                type: Array as () => MessageType[] | null,
                 required: true,
             },
             user: {
@@ -74,10 +75,15 @@
         },
         setup() {
             const globalStore = useGlobalsStore();
-            const globalChat = computed(() => globalStore.globalChat);
+            const authStore = useAuthStore();
+
+            // Computed properties to access global state
+            const globalChat = computed(() => authStore.logged ? globalStore.globalChat : true);
 
             function turnGlobalChat() {
-                globalStore.setGlobalChat(!globalStore.globalChat);
+                if (authStore.logged) {
+                    globalStore.setGlobalChat(!globalStore.globalChat);
+                }
             }
 
             return {
