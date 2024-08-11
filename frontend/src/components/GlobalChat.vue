@@ -62,30 +62,35 @@
     import { useGlobalsStore } from '../stores/globals';
     import { useAuthStore } from '../stores/auth';
 
+    // Variables to export to get values on Home.vue
     export default {
         name: 'GlobalChat',
         components: {
             Message,
         },
         props: {
+            // messages list, may be empty
             messages: {
                 type: Array as () => MessageType[] | null,
                 required: true,
             },
+            // users list, may be empty
             user: {
                 type: Object as () => UserType | null,
                 required: true,
             },
         },
         setup() {
+            // Global variables
             const globalStore = useGlobalsStore();
             const authStore = useAuthStore();
 
-            // Computed properties to access global state
+            // Refresh variable everytime it is changed
             const globalChat = computed(() =>
                 authStore.logged ? globalStore.globalChat : true,
             );
 
+            // Exported function for changing to global chat
             function turnGlobalChat() {
                 if (authStore.logged) {
                     globalStore.setGlobalChat(!globalStore.globalChat);
