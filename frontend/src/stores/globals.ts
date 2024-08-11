@@ -1,22 +1,17 @@
-import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { defineStore } from "pinia";
 
-export const useGlobalsStore = defineStore('globals', () => {
-    let globalChat = ref<Boolean>(true); // Variable that tracks if it is in global chat or not
-    let userFocused = ref<string>(''); // User that you are chatting with
-
-    function setGlobalChat(value: boolean) {
-        globalChat.value = value;
-    }
-
-    function setUserFocused(value: string) {
-        userFocused.value = value;
-    }
-
-    return {
-        globalChat,
-        userFocused,
-        setGlobalChat,
-        setUserFocused,
-    };
+export const useGlobalsStore = defineStore("globals", {
+  state: () => ({
+    globalChat: true,
+    userFocused: "",
+  }),
+  actions: {
+    setGlobalChat(value: boolean) {
+      this.globalChat = value;
+    },
+    setUserFocused(value: string) {
+      this.userFocused = value;
+    },
+  },
+  persist: true, // Adicione esta linha para persistir o estado
 });

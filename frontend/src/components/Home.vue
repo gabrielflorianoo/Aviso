@@ -17,7 +17,7 @@
                     />
                 </div>
             </div>
-            <!-- @update:globalChat is the emit from the GlobalChat method -->
+            <!-- @toggleGlobalChat is the emit from the GlobalChat method -->
             <GlobalChat
                 :messages="messages"
                 :globalChat="globalChat"
@@ -47,11 +47,11 @@
     let users = ref<UserType[]>([]);
     let user = ref<UserType | null>(null);
     let userFocused = computed(() => globalStore.userFocused);
-    const filteredUsers = computed(() =>
-        users.value.filter(
-            (userTag) => authStore.loggedUser?.username !== userTag.username,
-        ),
-    );
+    const filteredUsers = computed(() => {
+        return users.value.filter(
+            (elm: UserType) => elm.username != authStore.loggedUser?.username,
+        );
+    });
 
     const globalChat = computed(() => globalStore.globalChat);
 
@@ -63,17 +63,17 @@
     });
     async function getPosts() {
         try {
-            const response = await axios.get(
-                'http://localhost:3000/tweets/globalMessages',
-            );
-
             if (!globalChat.value) {
-                messages.value = response.data.filter(
-                    (elm: MessageType) =>
-                        elm.userID == userFocused.value &&
-                        elm.toUser == user.value?.username,
+                const response = await axios.get(
+                    `http://localhost:3000/users/${user.value}`,
                 );
+
+                let privateMessages = response.data.privateMessages;
             } else {
+                const response = await axios.get(
+                    'http://localhost:3000/tweets/globalMessages',
+                );
+
                 messages.value = response.data;
             }
         } catch (error) {
@@ -97,9 +97,8 @@
 
             await getPosts();
         }
-
-        console.log(globalStore.userFocused);
     }
+
     function turnGlobalChat(turned: boolean) {
         if (authStore.logged) {
             globalStore.setGlobalChat(turned);

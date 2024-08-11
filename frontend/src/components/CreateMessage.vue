@@ -30,26 +30,40 @@
     import axios from 'axios';
     import { computed, ref } from 'vue';
     import { useGlobalsStore } from '../stores/globals';
+    import { useAuthStore } from '../stores/auth';
 
     let globalStore = useGlobalsStore();
+    let authStore = useAuthStore();
 
     let messageRef = ref<string>('');
     let messageTo = computed(() => globalStore.userFocused);
-    console.log(messageTo.value);
+    let sender = computed(() => authStore.loggedUser);
 
     async function createPost() {
-        await axios
-            .post(
-                'http://localhost:3000/tweets',
-                {
-                    message: messageRef.value,
-                    toUser: messageTo.value,
-                },
-                { withCredentials: true },
-            )
-            .catch((err) => {
-                console.log('Error while creating post: ', err.message);
-            });
+        if (messageTo.value == '') {
+            await axios
+                .post(
+                    'http://localhost:3000/tweets',
+                    {
+                        message: messageRef.value,
+                        toUser: messageTo.value,
+                    },
+                    { withCredentials: true },
+                )
+                .catch((err) => {
+                    console.log('Error while creating post: ', err.message);
+                });
+        } else {
+            await axios
+                .put(
+                    `http://localhost:3000/users/${messageTo.value}`,
+                    { sender: sender.value, message: messageRef.value },
+                    { withCredentials: true },
+                )
+                .catch((err) => {
+                    console.log('Error while creating post: ', err.message);
+                });
+        }
 
         window.location.href = '/';
     }

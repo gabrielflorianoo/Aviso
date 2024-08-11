@@ -50,29 +50,37 @@
 
 <script lang="ts">
     import Message from './Message.vue';
+    import type { User as UserType, Message as MessageType } from '../types';
+    import { computed } from 'vue';
+    import { useGlobalsStore } from '../stores/globals';
 
     export default {
+        name: 'GlobalChat',
         components: {
             Message,
         },
         props: {
-            globalChat: {
-                type: Boolean,
-                required: true,
-            },
             messages: {
-                type: Array, // Corrigido para Array
+                type: Array as () => MessageType[],
                 required: true,
             },
             user: {
-                type: Object as () => Object | null,
+                type: Object as () => UserType | null,
                 required: true,
             },
         },
-        methods: {
-            turnGlobalChat() {
-                this.$emit('toggleGlobalChat', true);
-            },
+        setup() {
+            const globalStore = useGlobalsStore();
+            const globalChat = computed(() => globalStore.globalChat);
+
+            function turnGlobalChat() {
+                globalStore.setGlobalChat(!globalStore.globalChat);
+            }
+
+            return {
+                globalChat,
+                turnGlobalChat,
+            };
         },
     };
 </script>

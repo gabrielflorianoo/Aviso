@@ -8,12 +8,24 @@ const users = [
         email: 'user@example.com',
         password: 'P@ssw0rd123',
     },
+    {
+        username: 'exampleUser2',
+        email: 'user2@example.com',
+        password: 'P@ssw0rd123',
+    },
 ];
 
 /* GET users listing. */
 router.get('/', (req, res) => {
     req.session.user = users[0];
     res.send(users);
+});
+
+/* GET messages from that user */
+router.get('/:username', (req, res) => {
+    let found = users.find((user) => (user.username = req.params.username));
+
+    res.send(found);
 });
 
 /* POST request for creating a user. */
@@ -51,6 +63,47 @@ router.post(
         res.send('User found');
     },
 );
+
+router.put('/:username', (req, res, next) => {
+    // Encontrar o usuário pelo nome de usuário fornecido na URL
+    let user = users.find((user) => user.username === req.params.username);
+
+    // Verificar se o usuário existe
+    if (!user) {
+        return res.status(404).send('User not found');
+    }
+
+    // Verificar se o usuário possui mensagens privadas
+    let privateMessages = user.privateMessages || {};
+    let messages = privateMessages.messages || [];
+
+    // Adicionar a nova mensagem
+    if (!privateMessages.name) {
+        privateMessages.name = req.body.sender; // Definir o nome do remetente
+    }
+    messages.push(req.body.message); // Adicionar a nova mensagem à lista de mensagens
+
+    // Atualizar o objeto privateMessages no usuário
+    privateMessages = {
+        name: privateMessages.name, // Manter o nome do remetente
+        messages: messages, // Atualizar a lista de mensagens
+    };
+
+    let idx = users.findIndex((toFind) => toFind == user);
+
+    // Atualizar o usuário com as novas mensagens
+    users[idx] = {
+        username: user.username,
+        email: user.email,
+        password: user.password,
+        privateMessages: privateMessages,
+    };
+
+    // Aqui você deve salvar o usuário atualizado no seu banco de dados
+    // Exemplo: await saveUser(user); // Salve o usuário atualizado no banco de dados
+
+    res.send('User updated');
+});
 
 /* GET request for logging out. */
 router.get('/logout', (req, res) => {
