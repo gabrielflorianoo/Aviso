@@ -73,30 +73,30 @@
     import axios from 'axios';
     import { ref, onMounted } from 'vue';
 
-    // Cria referências reativas
+    // References for the fields
     let availabilityRefs = ref([]);
     let checkMarks = ref([]);
 
+    // Function that is called as soon as the DOM is loaded
     onMounted(() => {
-        // Após o dom ser montado, capture os elementos
         availabilityRefs.value =
             document.getElementsByClassName('availability');
         checkMarks.value = document.getElementsByClassName('check-mark');
 
-        // Itera sobre os elementos e aplica a opacidade
+        // Iterate over the fields and apply opacity
         Array.from(availabilityRefs.value).forEach((element) => {
             element.style.opacity = '0';
         });
     });
 
-    // Referências reativas para os dados do formulário
+    // References for form data
     const userName = ref('');
     const userPass = ref('');
     const termsAccepted = ref(false);
 
     async function createNewUser() {
         try {
-            // Faz um post para criar um novo usuário
+            // Make a POST request to create a new user
             const response = await axios.post(
                 'http://localhost:3000/users/login',
                 {
@@ -106,10 +106,10 @@
                 { withCredentials: true }
             );
 
-            // Redireciona para a página inicial
+            // Redirect to the home page
             window.location.href = '/';
         } catch (error) {
-            // Cria um erro personalizado caso a senha esteja errada
+            // Display custom error if the password is incorrect
             if (error.response && error.response.status == 400) {
                 availabilityRefs.value[1].style.display = 'block';
                 availabilityRefs.value[1].style.opacity = '1';
@@ -120,7 +120,7 @@
                 checkMarks.value[1].classList.add('fa-exclamation-triangle');
             }
 
-            // Cria um erro personalizado caso o usuário ja exista
+            // Display custom error if the user already exists
             if (error.response && error.response.status == 401) {
                 availabilityRefs.value[1].style.display = 'block';
                 availabilityRefs.value[1].style.opacity = '1';
@@ -132,13 +132,13 @@
     }
 
     function cancel() {
-        // Reseta todos os valores
+        // Reset all values
         userName.value = '';
         userPass.value = '';
         termsAccepted.value = false;
     }
 
-    // Função auxiliar para pegar o input dos icones
+    // Helper function to get input from icons
     function getInputFromRef(refNode, idx) {
         try {
             return refNode.value[idx].parentElement.parentNode.childNodes;
