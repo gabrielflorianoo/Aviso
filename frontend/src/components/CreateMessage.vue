@@ -32,16 +32,20 @@
     import { useGlobalsStore } from '../stores/globals';
     import { useAuthStore } from '../stores/auth';
 
+    // Global variables
     let globalStore = useGlobalsStore();
     let authStore = useAuthStore();
 
+    // References for the message field and for sending messages
     let messageRef = ref<string>('');
     let messageTo = computed(() => globalStore.userFocused);
     let sender = computed(() => authStore.loggedUser);
 
-    console.log(messageTo.value, sender.value);
+    // Function that changes the field privateMessages of a user 
+    // or posts the message in the Global Messages
     async function createPost() {
         if (messageTo.value == '') {
+            // create a new message on the global field
             await axios
                 .post(
                     'http://localhost:3000/tweets',
@@ -55,6 +59,7 @@
                     console.log('Error while creating post: ', err.message);
                 });
         } else {
+            // Updates the privateMessages field in a user
             await axios
                 .put(
                     `http://localhost:3000/users/${messageTo.value}`,
@@ -73,6 +78,7 @@
         window.location.href = '/';
     }
 
+    // Function for the button cancel
     function cancel() {
         messageRef.value = '';
 
