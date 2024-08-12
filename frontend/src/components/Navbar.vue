@@ -3,17 +3,22 @@
     import { useAuthStore } from '../stores/auth';
     import { computed } from 'vue';
 
+    // Global Variable
     const authStore = useAuthStore();
+
+    // Changes the value of logged to the global value of logged
     let logged = computed(() => authStore.logged);
 
+    // Function for logging out
     async function logout() {
         try {
+            // Sends a get request for destroying the session
             const response = await axios.get(
                 'http://localhost:3000/logout',
                 { withCredentials: true },
             );  
 
-            // Redireciona para a página inicial
+            // Redirect to the home page
             window.location.href = '/';
         } catch (error) {
             console.log('Error while logging out', error);

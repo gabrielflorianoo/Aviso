@@ -13,6 +13,7 @@
 </template>
 
 <script>
+    // Props needed by the template
     export default {
         props: {
             message: {
