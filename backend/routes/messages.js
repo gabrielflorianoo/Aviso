@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const uuid = require('uuid');
 
 var { ValidateMessage } = require('../models/Message.js');
 
@@ -12,6 +13,8 @@ const messages = [
     },
 ];
 
+const privateMessages = [];
+
 /* GET messages listing. */
 router.get('/globalMessages', (req, res) => {
     res.send(messages);
@@ -23,6 +26,37 @@ router.post('/', isLoggued, ValidateMessage, (req, res) => {
 
     res.send('Message sent succesfully');
 });
+
+router.get('/privateMessages', (req, res) => {
+    res.send(privateMessages);
+});
+
+/* POST request for creating a private post. */
+router.post('/:usernames', isLoggued, ValidateMessage, (req, res) => {
+    let usersToFind = req.params.usernames;
+    let message = createMessage(req.body.message, req.body.userID);
+
+    let found = privateMessages.find((pvrM) => pvrM.from == usersToFind);
+    if (!found) {
+        privateMessages.push({
+            from: usersToFind,
+            messages: [message],
+        });
+    } else {
+        found.messages.push(message);
+    }
+
+    res.send('Message sent succesfully');
+});
+
+function createMessage(message, userID) {
+    return {
+        messageID: uuid.v4(),
+        message: message,
+        userID: userID,
+        createDate: Date.now(),
+    };
+}
 
 function isLoggued(req, res, next) {
     if (!req.session.user) {

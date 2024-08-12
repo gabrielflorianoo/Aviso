@@ -41,7 +41,7 @@
     let messageTo = computed(() => globalStore.userFocused);
     let sender = computed(() => authStore.loggedUser);
 
-    // Function that changes the field privateMessages of a user 
+    // Function that changes the field privateMessages of a user
     // or posts the message in the Global Messages
     async function createPost() {
         if (messageTo.value == '') {
@@ -59,14 +59,13 @@
                     console.log('Error while creating post: ', err.message);
                 });
         } else {
-            // Updates the privateMessages field in a user
+            // Posts a new message in a dynamic url named by its users
             await axios
-                .put(
-                    `http://localhost:3000/users/${messageTo.value}`,
+                .post(
+                    `http://localhost:3000/tweets/${sender}_${messageTo}`,
                     {
-                        sender: sender.value,
                         message: messageRef.value,
-                        loggedUser: authStore.loggedUser?.username,
+                        userID: sender.value,
                     },
                     { withCredentials: true },
                 )

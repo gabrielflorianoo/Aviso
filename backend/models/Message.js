@@ -13,9 +13,6 @@ function ValidateMessage(req, res, next) {
     req.body.messageID = uuid.v4();
     req.body.userID = req.session.user.username;
     req.body.createDate = new Date();
-    if (!req.body.toUser) {
-        req.body.toUser = '';
-    }
 
     const { error } = MessageSchema.validate(req.body);
 

@@ -69,10 +69,13 @@
 
     // Functions that are called everytime the page is reloaded
     onMounted(async () => {
-        await authStore.checkSession();
-        await authStore.getUserSession();
-        await getUsers();
-        await getPosts();
+        // Loading all promisses simultaneously
+        Promise.all([
+            await authStore.checkSession(),
+            await authStore.getUserSession(),
+            await getUsers(),
+            await getPosts(),
+        ]);
     });
 
     // Fetch messages from the backend
@@ -93,7 +96,6 @@
                             prvMess.name == authStore.loggedUser?.username,
                     );
 
-                    
                     if (found && found.messages) {
                         value = found.messages;
                     } else {
