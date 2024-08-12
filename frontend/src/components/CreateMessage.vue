@@ -39,7 +39,7 @@
     // References for the message field and for sending messages
     let messageRef = ref<string>('');
     let messageTo = computed(() => globalStore.userFocused);
-    let sender = computed(() => authStore.loggedUser);
+    let sender = computed(() => authStore.loggedUser).value?.username;
 
     // Function that changes the field privateMessages of a user
     // or posts the message in the Global Messages
@@ -51,7 +51,6 @@
                     'http://localhost:3000/tweets',
                     {
                         message: messageRef.value,
-                        toUser: messageTo.value,
                     },
                     { withCredentials: true },
                 )
@@ -59,19 +58,24 @@
                     console.log('Error while creating post: ', err.message);
                 });
         } else {
-            // Posts a new message in a dynamic url named by its users
-            await axios
-                .post(
-                    `http://localhost:3000/tweets/${sender}_${messageTo}`,
+            // Posts a new message based in a dynamic url named by its users
+            try {
+                // Url for posting private messages
+                const url = `http://localhost:3000/tweets/privateMessages`;
+
+                // Post new message
+                await axios.post(
+                    url,
                     {
                         message: messageRef.value,
-                        userID: sender.value,
+                        userID: sender,
+                        toUser: messageTo.value,
                     },
                     { withCredentials: true },
-                )
-                .catch((err) => {
-                    console.log('Error while creating post: ', err.message);
-                });
+                );
+            } catch (err: any) {
+                console.log('Error while creating post:', err.message);
+            }
         }
 
         window.location.href = '/';

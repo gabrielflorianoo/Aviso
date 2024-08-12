@@ -6,6 +6,7 @@ const MessageSchema = Joi.object({
     message: Joi.string().min(1).max(300).required(),
     userID: Joi.string().min(3).max(30).required(),
     createDate: Joi.date().required(),
+    toUser: Joi.string(),   // In privateMessages is needed
 });
 
 function ValidateMessage(req, res, next) {

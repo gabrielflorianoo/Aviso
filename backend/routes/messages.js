@@ -32,14 +32,16 @@ router.get('/privateMessages', (req, res) => {
 });
 
 /* POST request for creating a private post. */
-router.post('/:usernames', isLoggued, ValidateMessage, (req, res) => {
-    let usersToFind = req.params.usernames;
+router.post('/privateMessages', isLoggued, ValidateMessage, (req, res) => {
+    let usersToFind1 = `${req.body.sender}_${req.body.toUser}`;
+    let usersToFind2 = `${req.body.toUser}_${req.body.sender}`;
+
     let message = createMessage(req.body.message, req.body.userID);
 
-    let found = privateMessages.find((pvrM) => pvrM.from == usersToFind);
+    let found = privateMessages.find((pvrM) => pvrM.from == usersToFind1 || usersToFind2);
     if (!found) {
         privateMessages.push({
-            from: usersToFind,
+            from: `${req.body.sender}_${req.body.toUser}`, // Makes from tag specific
             messages: [message],
         });
     } else {

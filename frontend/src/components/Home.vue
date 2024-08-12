@@ -86,14 +86,16 @@
 
             if (!globalChat.value) {
                 response = await axios.get(
-                    `http://localhost:3000/users/${userFocused.value}`,
+                    `http://localhost:3000/tweets/privateMessages`,
                 );
 
                 if (response.data) {
                     // Get the messages sent to the loggedUser
                     let found = response.data.find(
                         (prvMess: any) =>
-                            prvMess.name == authStore.loggedUser?.username,
+                            prvMess.from ==
+                            `${authStore.loggedUser?.username}_${userFocused.value}` ||
+                            `${userFocused.value}_${authStore.loggedUser?.username}`,
                     );
 
                     if (found && found.messages) {
