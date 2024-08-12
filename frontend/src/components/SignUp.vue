@@ -92,23 +92,23 @@
     import axios from 'axios';
     import { ref, onMounted } from 'vue';
 
-    // Cria referências reativas
+    // Get the error messages and icons on the form
     let availabilityRefs = ref([]);
     let checkMarks = ref([]);
 
     onMounted(() => {
-        // Após o dom ser montado, capture os elementos
+        // Get elements after DOM is loaded
         availabilityRefs.value =
             document.getElementsByClassName('availability');
         checkMarks.value = document.getElementsByClassName('check-mark');
 
-        // Itera sobre os elementos e aplica a opacidade
+        // Apply zero opacity on each element
         Array.from(availabilityRefs.value).forEach((element) => {
             element.style.opacity = '0';
         });
     });
 
-    // Referências reativas para os dados do formulário
+    // References for the form variables
     const userName = ref('');
     const userEmail = ref('');
     const userPass = ref('');
@@ -116,7 +116,7 @@
 
     async function createNewUser() {
         try {
-            // Faz um post para criar um novo usuário
+            // Make a post request for creating a new user
             const response = await axios.post(
                 'http://localhost:3000/users/register',
                 {
@@ -124,13 +124,13 @@
                     email: userEmail.value.trim(),
                     password: userPass.value,
                 },
-                { withCredentials: true }
+                { withCredentials: true },
             );
 
-            // Redireciona para a página inicial
+            // Load the home page
             window.location.href = '/';
         } catch (error) {
-            // Cria um erro personalizado caso a senha esteja errada
+            // Creates a personalized error for the user
             if (error.response && error.response.status == 400) {
                 availabilityRefs.value[2].style.display = 'block';
                 availabilityRefs.value[2].style.opacity = '1';
@@ -141,7 +141,7 @@
                 checkMarks.value[2].classList.add('fa-exclamation-triangle');
             }
 
-            // Cria um erro personalizado caso o usuário ja exista
+            // Creates a personalized error for the user
             if (error.response && error.response.status == 401) {
                 availabilityRefs.value[2].style.display = 'block';
                 availabilityRefs.value[2].style.opacity = '1';
@@ -153,14 +153,14 @@
     }
 
     function cancel() {
-        // Reseta todos os valores
+        // Reset all values
         userName.value = '';
         userEmail.value = '';
         userPass.value = '';
         termsAccepted.value = false;
     }
 
-    // Função auxiliar para pegar o input dos icones
+    // Auxiliar function for getting the input by the icons
     function getInputFromRef(refNode, idx) {
         try {
             return refNode.value[idx].parentElement.parentNode.childNodes;
