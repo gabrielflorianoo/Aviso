@@ -13,6 +13,7 @@
 </template>
 
 <script>
+    // Props needed by the template
     export default {
         props: {
             user: {
@@ -21,6 +22,7 @@
             },
         },
         methods: {
+            // Function that emits a signal to the parent template
             handleClick() {
                 this.$emit('click', this.user.username);
             },
