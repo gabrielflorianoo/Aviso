@@ -11,6 +11,36 @@ const messages = [
         userID: 'exampleUser',
         createDate: Date.now(),
     },
+    {
+        messageID: '1234567890abcdef',
+        message: 'Este é um exemplo de mensagem com o usuário exampleUser.',
+        userID: 'exampleUser',
+        createDate: Date.now(),
+    },
+    {
+        messageID: '1234567890abcdef',
+        message: 'Este é um exemplo de mensagem com o usuário exampleUser.',
+        userID: 'exampleUser',
+        createDate: Date.now(),
+    },
+    {
+        messageID: '1234567890abcdef',
+        message: 'Este é um exemplo de mensagem com o usuário exampleUser.',
+        userID: 'exampleUser',
+        createDate: Date.now(),
+    },
+    {
+        messageID: '1234567890abcdef',
+        message: 'Este é um exemplo de mensagem com o usuário exampleUser.',
+        userID: 'exampleUser',
+        createDate: Date.now(),
+    },
+    {
+        messageID: '1234567890abcdef',
+        message: 'Este é um exemplo de mensagem com o usuário exampleUser.',
+        userID: 'exampleUser',
+        createDate: Date.now(),
+    },
 ];
 
 const privateMessages = [];

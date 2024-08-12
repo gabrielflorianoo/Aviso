@@ -5,7 +5,7 @@
         v-if="globalChat"
     >
         <h1 class="title globalSection">Global chat</h1>
-        <div>
+        <section class="cardList">
             <div
                 class="p-1 holdCards"
                 v-for="message in messages"
@@ -18,7 +18,7 @@
                 />
                 <Message :message="message" v-else />
             </div>
-        </div>
+        </section>
     </div>
     <div
         class="column is-align-items-end cardColumn"
@@ -26,13 +26,13 @@
         v-else
     >
         <section class="globalSection">
-            <h1 class="title globalTitle">Private Chat</h1>
+            <h1 class="title globalTitle">Chatting with {{ userFocused }}</h1>
             <button class="button is-danger" @click="turnGlobalChat">
                 Go to Global Chat
             </button>
         </section>
-        <div>
-            <template v-if="messages && messages.length > 0">
+        <div class="messagesSection">
+            <section v-if="messages && messages.length > 0">
                 <div v-for="message in messages" class="p-1 holdCards">
                     <Message
                         v-if="message?.userID == user?.username"
@@ -47,10 +47,10 @@
                         :message="message"
                     />
                 </div>
-            </template>
-            <template v-else>
+            </section>
+            <section class="noMessages" v-else>
                 <h1 class="title">No messages with this person</h1>
-            </template>
+            </section>
         </div>
     </div>
 </template>
@@ -90,6 +90,8 @@
                 authStore.logged ? globalStore.globalChat : true,
             );
 
+            const userFocused = computed(() => globalStore.userFocused);
+
             // Exported function for changing to global chat
             function turnGlobalChat() {
                 if (authStore.logged) {
@@ -99,6 +101,7 @@
 
             return {
                 globalChat,
+                userFocused,
                 turnGlobalChat,
             };
         },
@@ -109,10 +112,11 @@
     .cardColumn {
         display: grid;
         grid-template-columns: 1fr;
-        grid-template-rows: 1fr 1fr;
+        grid-template-rows: 0fr 1fr;
         flex-direction: column;
         justify-content: flex-end;
         height: 100%;
+        padding: 0;
     }
 
     .globalSection {
@@ -122,11 +126,17 @@
         align-items: start;
         align-self: start;
         margin-bottom: 1rem;
+        padding: 1rem;
     }
 
     .globalSection button {
         width: fit-content;
         justify-self: end;
+    }
+
+    .cardList {
+        overflow-y: auto;
+        height: 100%;
     }
 
     .holdCards {
@@ -142,7 +152,20 @@
         justify-self: end;
     }
 
+    .messagesSection {
+        display: grid;
+        height: 100%;
+        align-content: end;
+    }
+
     .holdCards > * {
         width: 500px;
+    }
+
+    .noMessages {
+        display: grid;
+        height: 100%;
+        padding: 5%;
+        justify-content: center;
     }
 </style>
